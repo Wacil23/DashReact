@@ -30,6 +30,13 @@ class Invoice
     #[ORM\Column(length: 255)]
     private ?string $paymentMethod = null;
 
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Car $car = null;
+
+    #[ORM\Column]
+    private ?int $chrono = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -94,4 +101,29 @@ class Invoice
 
         return $this;
     }
+
+    public function getCar(): ?Car
+    {
+        return $this->car;
+    }
+
+    public function setCar(Car $car): self
+    {
+        $this->car = $car;
+
+        return $this;
+    }
+
+    public function getChrono(): ?int
+    {
+        return $this->chrono;
+    }
+
+    public function setChrono(int $chrono): self
+    {
+        $this->chrono = $chrono;
+
+        return $this;
+    }
+
 }

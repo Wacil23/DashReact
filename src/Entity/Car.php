@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\Invoice;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CarRepository;
 
@@ -43,7 +42,6 @@ class Car
 
     #[ORM\Column(length: 255)]
     private ?string $gearbox = null;
-
 
     public function getId(): ?int
     {
