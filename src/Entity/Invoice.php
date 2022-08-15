@@ -2,11 +2,42 @@
 
 namespace App\Entity;
 
-use App\Repository\InvoiceRepository;
+use App\Entity\User;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\InvoiceRepository;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 #[ORM\Entity(repositoryClass: InvoiceRepository::class)]
+#[ApiResource(
+    itemOperations: [
+        'GET', 
+        'PUT', 
+        'DELETE'
+    ],
+    attributes: [
+        'pagination_enabled' => false,
+        'pagination_items_per_page' => 10,
+        'order' => ['sentAt' => 'desc'],
+    ],
+    normalizationContext: ['groups' => ['invoices_read']],
+    denormalizationContext: [
+        'disable_type_enforcement' => true
+    ],
+
+    subresourceOperations: [
+        'api_customers_invoices_get_subresource' => ['normalization_context' => ['groups' => 'invoices_subresource']]
+    ],
+
+)]
+#[ApiFilter(
+    SearchFilter::class,
+    properties: ['amount', 'paymentMethod']
+),
+]
 class Invoice
 {
     #[ORM\Id]
@@ -15,27 +46,33 @@ class Invoice
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['invoices_read', 'customers_read'])]
     private ?float $amount = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['invoices_read', 'customers_read'])]
     private ?\DateTimeInterface $sentAt = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['invoices_read', 'customers_read'])]
     private ?string $status = null;
 
     #[ORM\ManyToOne(inversedBy: 'invoices')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['invoices_read'])]
     private ?Customer $customer = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['cars_read',  'customers_read', 'invoices_read'])]
     private ?string $paymentMethod = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: true)]
-    private ?Car $car = null;
-
     #[ORM\Column]
+    #[Groups(['invoices_read', 'customers_read'])]
     private ?int $chrono = null;
+
+    #[ORM\OneToOne(inversedBy: 'invoice', cascade: ['persist', 'remove'])]
+    #[Groups(['invoices_read'])]
+    private ?Car $car = null;
 
     public function getId(): ?int
     {
@@ -102,18 +139,6 @@ class Invoice
         return $this;
     }
 
-    public function getCar(): ?Car
-    {
-        return $this->car;
-    }
-
-    public function setCar(Car $car): self
-    {
-        $this->car = $car;
-
-        return $this;
-    }
-
     public function getChrono(): ?int
     {
         return $this->chrono;
@@ -126,4 +151,23 @@ class Invoice
         return $this;
     }
 
+    public function getCar(): ?Car
+    {
+        return $this->car;
+    }
+
+    public function setCar(?Car $car): self
+    {
+        $this->car = $car;
+
+        return $this;
+    }
+
+    /**
+     * @Groups({"invoices_read"})
+     * @return User
+     */
+    public function getUser(): User{
+        return $this->customer->getUser();
+    }
 }

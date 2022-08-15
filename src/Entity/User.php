@@ -2,25 +2,51 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\Customer;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use App\Repository\UserRepository;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ApiResource(
+    normalizationContext: [
+        'groups' => 'users_read'
+    ]
+)]
+#[ApiFilter(
+    SearchFilter::class,
+    properties: ['firstName', 'lastName', 'email']
+),
+]
+#[UniqueEntity("email", message: "L'email doit être différent")]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['users_read', 'customers_read', 'invoices_read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Groups(['users_read', 'customers_read', 'invoices_read'])]
+    #[Assert\NotBlank(message: "L'email doit être reseigner")]
     private ?string $email = null;
 
+    #[ORM\Column(length: 180, nullable: true)]
+    #[Groups(['users_read', 'customers_read', 'invoices_read'])]
+    private ?string $username = null;
+
     #[ORM\Column]
+    #[Groups(['users_read'])]
     private array $roles = [];
 
     /**
@@ -30,12 +56,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['users_read', 'customers_read', 'invoices_read'])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['users_read', 'customers_read', 'invoices_read'])]
     private ?string $lastName = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Customer::class)]
+    #[Groups(['users_read'])]
     private Collection $customers;
 
     public function __construct()
@@ -56,6 +85,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmail(string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+
+    public function setUsername(?string $username): self
+    {
+        $this->username = $username;
 
         return $this;
     }
@@ -165,5 +202,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @Groups({"users_read"})
+     * */
+
+    public function getUsername(): string {
+        $firstString = mb_substr($this->getFirstName(), 0, 1);
+        $removeAccent = iconv('utf-8', 'us-ascii//TRANSLIT', $firstString);;
+        $lastName = $this->getLastName();
+        $randomNumber = random_int(1, 10);
+        $username = $removeAccent . '' .$lastName . '' . $randomNumber*10;
+        return $username;
     }
 }

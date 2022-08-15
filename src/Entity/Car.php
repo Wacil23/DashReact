@@ -2,10 +2,28 @@
 
 namespace App\Entity;
 
+use App\Entity\Invoice;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CarRepository;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 #[ORM\Entity(repositoryClass: CarRepository::class)]
+#[ApiResource(
+    normalizationContext: [
+        "groups" => ['cars_read']
+    ],
+    collectionOperations: ['GET', 'POST'],
+    itemOperations: ['GET', 'PUT', 'DELETE'],
+    order: ['isSold' => 'asc'],
+)]
+#[ApiFilter(
+    SearchFilter::class,
+    properties: ['model', 'year', 'kilometers', 'brand', 'price', 'status', 'nbDoors', 'fuel', 'type', 'gearbox']
+),
+]
 class Car
 {
     #[ORM\Id]
@@ -14,34 +32,53 @@ class Car
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['cars_read', 'invoices_read'])]
     private ?string $model = null;
 
     #[ORM\Column]
+    #[Groups(['cars_read', 'invoices_read'])]
     private ?int $year = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['cars_read', 'invoices_read'])]
     private ?string $brand = null;
 
     #[ORM\Column]
+    #[Groups(['cars_read', 'invoices_read'])]
     private ?int $kilometers = null;
 
     #[ORM\Column]
+    #[Groups(['cars_read', 'invoices_read'])]
     private ?float $price = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['cars_read', 'invoices_read'])]
     private ?string $status = null;
 
     #[ORM\Column]
+    #[Groups(['cars_read', 'invoices_read'])]
     private ?int $nbDoors = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['cars_read', 'invoices_read'])]
     private ?string $fuel = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['cars_read', 'invoices_read'])]
     private ?string $type = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['cars_read', 'invoices_read'])]
     private ?string $gearbox = null;
+
+    #[ORM\OneToOne(mappedBy: "car", cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: true)]
+    #[Groups(['cars_read'])]
+    private ?Invoice $invoice = null;
+
+    #[ORM\Column]
+    #[Groups(['cars_read', 'invoices_read'])]
+    private ?bool $isSold = null;
 
     public function getId(): ?int
     {
@@ -164,6 +201,30 @@ class Car
     public function setGearbox(string $gearbox): self
     {
         $this->gearbox = $gearbox;
+
+        return $this;
+    }
+
+    public function getInvoice(): ?Invoice
+    {
+        return $this->invoice;
+    }
+
+    public function setInvoice(Invoice $invoice): self
+    {
+        $this->invoice = $invoice;
+
+        return $this;
+    }
+
+    public function isIsSold(): ?bool
+    {
+        return $this->isSold;
+    }
+
+    public function setIsSold(bool $isSold): self
+    {
+        $this->isSold = $isSold;
 
         return $this;
     }
