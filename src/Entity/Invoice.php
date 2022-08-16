@@ -2,14 +2,16 @@
 
 namespace App\Entity;
 
+use Assert\Choice;
 use App\Entity\User;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\InvoiceRepository;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use DateTime;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: InvoiceRepository::class)]
 #[ApiResource(
@@ -49,12 +51,14 @@ class Invoice
     #[Groups(['invoices_read', 'customers_read'])]
     private ?float $amount = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['invoices_read', 'customers_read'])]
-    private ?\DateTimeInterface $sentAt = null;
+    #[ORM\Column]
+    #[Groups(['invoices_read', 'customers_read', 'invoices_subresource'])]
+    #[Assert\NotBlank(message: "La date d'envoie doit etre renseigner")]
+    private ?\DateTime $sentAt = null;
 
     #[ORM\Column(length: 255)]
     #[Groups(['invoices_read', 'customers_read'])]
+    #[Assert\Choice(choices: ['PAID', 'CANCELLED', 'SENT'], message: "Le choix doit etre paid cancelled ou sent")]
     private ?string $status = null;
 
     #[ORM\ManyToOne(inversedBy: 'invoices')]
@@ -91,16 +95,17 @@ class Invoice
         return $this;
     }
 
-    public function getSentAt(): ?\DateTimeInterface
+    public function getSentAt()
     {
+
         return $this->sentAt;
     }
 
-    public function setSentAt(\DateTimeInterface $sentAt): self
+    public function setSentAt($sentAt)
     {
-        $this->sentAt = $sentAt;
-
-        return $this;
+            $this->sentAt = $sentAt;
+            return $this;
+        
     }
 
     public function getStatus(): ?string

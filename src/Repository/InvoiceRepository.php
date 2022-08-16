@@ -2,9 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\Invoice;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Invoice>
@@ -21,6 +22,7 @@ class InvoiceRepository extends ServiceEntityRepository
         parent::__construct($registry, Invoice::class);
     }
 
+    
     public function add(Invoice $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
@@ -29,7 +31,7 @@ class InvoiceRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-
+    
     public function remove(Invoice $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
@@ -38,7 +40,18 @@ class InvoiceRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-
+    public function findNextChrono(User $user){
+        return $this->createQueryBuilder("i")
+                    ->select("i.chrono")
+                    ->join("i.customer", "c")
+                    ->where("c.user = :user")       
+                    ->setParameter("user", $user)
+                    ->orderBy("i.chrono", "desc")
+                    ->setMaxResults(1)
+                    ->getQuery()
+                    ->getSingleScalarResult() + 1;    
+                 }
+    
 //    /**
 //     * @return Invoice[] Returns an array of Invoice objects
 //     */

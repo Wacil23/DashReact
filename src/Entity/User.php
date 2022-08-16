@@ -50,7 +50,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private array $roles = [];
 
     /**
-     * @var string The hashed password
+     * @var string The hashed passwords
      */
     #[ORM\Column]
     private ?string $password = null;
@@ -90,11 +90,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
 
-    public function setUsername(?string $username): self
+    public function getUsername(): ?string
     {
-        $this->username = $username;
-
-        return $this;
+        return $this->username;
     }
 
     /**
@@ -129,16 +127,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see PasswordAuthenticatedUserInterface
      */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(?string $password): self
     {
-        $this->password = $password;
-
-        return $this;
+            $this->password = $password;
+            return $this;
+    
     }
 
     /**
@@ -208,12 +206,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"users_read"})
      * */
 
-    public function getUsername(): string {
-        $firstString = mb_substr($this->getFirstName(), 0, 1);
-        $removeAccent = iconv('utf-8', 'us-ascii//TRANSLIT', $firstString);;
-        $lastName = $this->getLastName();
-        $randomNumber = random_int(1, 10);
-        $username = $removeAccent . '' .$lastName . '' . $randomNumber*10;
-        return $username;
+    public function setUsername(?string $username): self {
+        if($username === null || empty($username)) {
+            $firstString = mb_substr($this->getFirstName(), 0, 1);
+            $removeAccent = iconv('utf-8', 'us-ascii//TRANSLIT', $firstString);;
+            $lastName = $this->getLastName();
+            $randomNumber = random_int(1, 10);
+            $username = $removeAccent . '' .$lastName . '' . $randomNumber*17;
+             $this->username = $username;
+             return $this;
+            }
+            dd($this);
     }
+
+    function randomPassword() {
+        $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+        $pass = array(); //remember to declare $pass as an array
+        $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+        for ($i = 0; $i < 8; $i++) {
+            $n = rand(0, $alphaLength);
+            $pass[] = $alphabet[$n];
+        }
+        return implode($pass); //turn the array into a string
+      }
 }
