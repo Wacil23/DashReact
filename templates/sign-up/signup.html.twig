@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<img src="https://academy.donkey.school/assets/logo/logo.png" alt="Donkey Academy logo">
+	<p class="name">Bonjour
+		{{ firstname }}!</p>
+	<p>Vous venez de créer un compte. Avant de pouvoir l'utiliser, veuillez prendre en note vos identifiants :</p>
+
+	<p>
+	Username : <strong>{{ username }}</strong>
+	</p>
+
+	<p>
+	Mot de passe : <strong>{{ password }}</strong>	
+	</p>
+
+	<p>
+		(Ce lien est valide pendant 24h)
+	</p>
+	<p>Si vous n'êtes pas à l'origine de cette demande, aucune action supplémentaire de votre part n'est requise. Ignorez simplement ce message. Le compte ne sera pas validé.</p>
+	<p>Bonne Journée</p>
+	<p class="sign">L'équipe de DonkeyAcademy</p>
+{% endblock %}

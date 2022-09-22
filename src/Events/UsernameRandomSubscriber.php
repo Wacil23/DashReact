@@ -3,17 +3,22 @@
 namespace App\Events;
 
 use App\Entity\User;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use ApiPlatform\Core\EventListener\EventPriorities;
+use App\Repository\UserRepository;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class UsernameRandomSubscriber {
+class UsernameRandomSubscriber implements EventSubscriberInterface {
 
     private $security;
+    private $repository;
 
-    public function __construct(User $user)
+    public function __construct(Security $security, UserRepository $repository)
     {
-        $this->user = $user;
+        $this->security = $security;
+        $this->repository = $repository;
     }
 
     public static function getSubscribedEvents()
@@ -27,16 +32,18 @@ class UsernameRandomSubscriber {
     {
         $result = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
-        dd($method);
+        $username = $result->getUsername();
+
         if($result instanceof User && $method === 'POST') 
         {   
-            $firstString = mb_substr($this->user->getFirstName(), 0, 1);
-            $removeAccent = iconv('utf-8', 'us-ascii//TRANSLIT', $firstString);;
-            $lastName = $this->user->getLastName();
-            $randomNumber = random_int(1, 10);
-            $username = $removeAccent . '' .$lastName . '' . $randomNumber*10;
-            $result->setUsername($username);
-            dd($result);
+            if($username === null || empty($username)){
+                $firstString = mb_substr($result->getFirstName(), 0, 1);
+                $removeAccent = iconv('utf-8', 'us-ascii//TRANSLIT', $firstString);;
+                $lastName = $result->getLastName();
+                $randomNumber = random_int(1, 10);
+                $username = $removeAccent . '' .$lastName . '' . $randomNumber*10;
+                $result->setUsername($username);
+            }
         }
 
     }

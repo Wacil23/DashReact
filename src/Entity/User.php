@@ -22,10 +22,11 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
         'groups' => 'users_read'
     ]
 )]
-#[ApiFilter(
-    SearchFilter::class,
-    properties: ['firstName', 'lastName', 'email']
-),
+#[
+    ApiFilter(
+        SearchFilter::class,
+        properties: ['firstName', 'lastName', 'email']
+    ),
 ]
 #[UniqueEntity("email", message: "L'email doit être différent")]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -42,7 +43,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $email = null;
 
     #[ORM\Column(length: 180, nullable: true)]
-    #[Groups(['users_read', 'customers_read', 'invoices_read'])]
+    #[Groups(['users_read'])]
     private ?string $username = null;
 
     #[ORM\Column]
@@ -54,6 +55,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?string $plainPassword = null;
 
     #[ORM\Column(length: 255)]
     #[Groups(['users_read', 'customers_read', 'invoices_read'])]
@@ -96,6 +100,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * @Groups({"users_read"})
+     * */
+
+    public function setUsername(?string $username)
+    {
+        if ($username === null || empty($username)) {
+            $firstString = mb_substr($this->getFirstName(), 0, 1);
+            $removeAccent = iconv('utf-8', 'us-ascii//TRANSLIT', $firstString);;
+            $lastName = $this->getLastName();
+            $randomNumber = random_int(1, 10);
+            $username = $removeAccent . '' . $lastName . '' . $randomNumber * 17;
+            $this->username = $username;	
+            return $this;
+        }
+        $firstString = mb_substr($this->getFirstName(), 0, 1);
+        $removeAccent = iconv('utf-8', 'us-ascii//TRANSLIT', $firstString);;
+        $lastName = $this->getLastName();
+        $randomNumber = random_int(1, 10);
+        $username = $removeAccent . '' . $lastName . '' . $randomNumber * 17;
+        $this->username = $username;
+       
+        return $this;
+    }
+
+    /**
      * A visual identifier that represents this user.
      *
      * @see UserInterface
@@ -132,12 +161,48 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
-    public function setPassword(?string $password): self
+    public function setPassword(?string $password)
     {
+        $this->password = $password;
+        return $password;
+    }
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(?string $plainPassword)
+    {
+        $this->plainPassword = $plainPassword;
+        return $plainPassword;
+    }
+
+    public function setRandomPassword(?string $password)
+    {
+        if ($password === null || empty($password)) {
+            $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+            $password = array(); //remember to declare $pass as an array
+            $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+            for ($i = 0; $i < 8; $i++) {
+                $n = rand(0, $alphaLength);
+                $password[] = $alphabet[$n];
+            }
+            return implode($password); //turn the array into a string
             $this->password = $password;
             return $this;
-    
+        }
+        $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+        $password = array(); //remember to declare $pass as an array
+        $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+        for ($i = 0; $i < 8; $i++) {
+            $n = rand(0, $alphaLength);
+            $password[] = $alphabet[$n];
+        }
+        return implode($password); //turn the array into a string
+        $this->password = $password;
+        return $this;
     }
+
 
     /**
      * @see UserInterface
@@ -201,32 +266,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
-    /**
-     * @Groups({"users_read"})
-     * */
-
-    public function setUsername(?string $username): self {
-        if($username === null || empty($username)) {
-            $firstString = mb_substr($this->getFirstName(), 0, 1);
-            $removeAccent = iconv('utf-8', 'us-ascii//TRANSLIT', $firstString);;
-            $lastName = $this->getLastName();
-            $randomNumber = random_int(1, 10);
-            $username = $removeAccent . '' .$lastName . '' . $randomNumber*17;
-             $this->username = $username;
-             return $this;
-            }
-            dd($this);
-    }
-
-    function randomPassword() {
-        $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
-        $pass = array(); //remember to declare $pass as an array
-        $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
-        for ($i = 0; $i < 8; $i++) {
-            $n = rand(0, $alphaLength);
-            $pass[] = $alphabet[$n];
-        }
-        return implode($pass); //turn the array into a string
-      }
 }
