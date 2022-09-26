@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         "groups" => ['customers_read']
     ],
     collectionOperations: ['GET', 'POST'],
-    itemOperations: ['GET', 'PUT', 'DELETE'],
+    itemOperations: ['GET', 'PUT', 'DELETE', 'PATCH'],
     order: ['firstName', 'lastName' => 'ASC'],
 )]
 #[

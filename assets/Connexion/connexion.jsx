@@ -10,8 +10,8 @@ function Connexion() {
 
   const bgHeroContainer = useRef();
   const [isLoading, setIsLoading] = useState(false);
-  
-  const { setIsAuth } = useContext(AuthContext) 
+
+  const { setIsAuth } = useContext(AuthContext)
 
   useEffect(() => {
     const bgHero = Lottie.loadAnimation({
@@ -23,52 +23,50 @@ function Connexion() {
     })
     return () => bgHero.destroy();
   }, [])
-  
+
   const checkMarkContainer = useRef();
-  
+
   useEffect(() => {
 
-      const checkMark = Lottie.loadAnimation({
-        container: checkMarkContainer.current,
-        animationData: require('../data/loading.json'),
-        renderer: 'svg',
-        loop: false,
-        autoplay: true,
-        rendererSettings: {
-          preserveAspectRatio: 'xMidYMid slice' // also tried 'xMidYMid meet'
+    const checkMark = Lottie.loadAnimation({
+      container: checkMarkContainer.current,
+      animationData: require('../data/loading.json'),
+      renderer: 'svg',
+      loop: false,
+      autoplay: true,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice' // also tried 'xMidYMid meet'
       }
-      })
-      
-      checkMark.pause();
-      checkMark.resize(20);
-      return () => checkMark.destroy();
+    })
+
+    checkMark.pause();
+    checkMark.resize(20);
+    return () => checkMark.destroy();
 
   }, [])
 
-
-  
   const [isLog, setIsLog] = useState(false);
-  
-  
+
+
   const [credentials, setCredentials] = useState({
     username: 'ASalmi153',
     password: 'JHLrx1NR'
   });
-  
+
   const [passwordShown, setPasswordShown] = useState(false);
-  
+
   const togglePassword = () => {
     setPasswordShown(!passwordShown);
   };
-  
+
   const [error, setError] = useState('')
-  
+
   const handleChange = ({ currentTarget }) => {
     const { value, name } = currentTarget
     setCredentials({ ...credentials, [name]: value });
   };
-  
-  
+
+
   const handleSubmit = async event => {
     event.preventDefault();
     try {
@@ -88,7 +86,7 @@ function Connexion() {
     console.log(credentials);
   };
 
-  
+
   return (
     <div className='flex m-10 justify-evenly items-center md:flex lg:flex-row mx-auto my-auto h-screen'>
       <div className='hidden md:flex w-1/2 my-auto '>
@@ -100,8 +98,8 @@ function Connexion() {
       <div className="w-full max-w-sm mx-auto my-auto error:text-red-500">
         <h1 className='text-blue-600 font-bold text-center text-3xl mb-16'>Connexion</h1>
         <form onSubmit={handleSubmit} className={`bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4  ${error ? "errorModal" : ""}`}>
-        <div className='mx-auto w-2/4'>
-            <div className={`${isLog ? '' : 'hidden'}`}ref={checkMarkContainer}></div>
+          <div className='mx-auto w-2/4'>
+            <div className={`${isLog ? '' : 'hidden'}`} ref={checkMarkContainer}></div>
           </div>
           {!isLog && <><Field label="Identifiant"
             name="username"
@@ -109,25 +107,25 @@ function Connexion() {
             onChange={handleChange}
             placeholder="Votre identifiant"
             error={error} />
-          <div className='flex w-full items-center'>
-            <Field label="Mot de passe"
-              name="password"
-              value={credentials.password}
-              onChange={handleChange}
-              placeholder="Votre mot de passe"
-              togglePassword={togglePassword}
-              type={passwordShown ? "text" : "password"}
-              error="" />
-            <button type='button' className='-ml-9 mt-3' onClick={togglePassword}> {!passwordShown ? <BsEye /> : <BsEyeSlash />}</button>
-          </div>
-          <div className="flex items-center justify-between">
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline w-4/6" type="submit">
-              Se connecter
-            </button>
-            <a className="inline-block align-baseline font-bold text-sm px-5 w-full text-blue-500 hover:text-blue-800" href="#">
-              Mot de passe oublié ?
-            </a> 
-          </div>
+            <div className='flex w-full items-center'>
+              <Field label="Mot de passe"
+                name="password"
+                value={credentials.password}
+                onChange={handleChange}
+                placeholder="Votre mot de passe"
+                togglePassword={togglePassword}
+                type={passwordShown ? "text" : "password"}
+                error="" />
+              <button type='button' className='-ml-9 mt-3' onClick={togglePassword}> {!passwordShown ? <BsEye /> : <BsEyeSlash />}</button>
+            </div>
+            <div className="flex items-center justify-between">
+              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline w-4/6" type="submit">
+                Se connecter
+              </button>
+              <a className="inline-block align-baseline font-bold text-sm px-5 w-full text-blue-500 hover:text-blue-800" href="#">
+                Mot de passe oublié ?
+              </a>
+            </div>
           </>}
           {error && <p className="text-center mt-3 font-bold text-red-600 text-danger">{error}</p>}
         </form>
@@ -135,10 +133,10 @@ function Connexion() {
           &copy;2022 Quartz Corp. All rights reserved.
         </p>
       </div>
-      
+
     </div>
-    
-              
+
+
   )
 }
 

@@ -2,73 +2,64 @@
 
 namespace App\Entity;
 
+use ORM\Column;
+use Assert\NotBlank;
 use App\Entity\Customer;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
-use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
-    normalizationContext: [
-        'groups' => 'users_read'
-    ]
+    collectionOperations: []
 )]
-#[
-    ApiFilter(
-        SearchFilter::class,
-        properties: ['firstName', 'lastName', 'email']
-    ),
-]
+
 #[UniqueEntity("email", message: "L'email doit être différent")]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['users_read', 'customers_read', 'invoices_read'])]
+
     private ?int $id = null;
 
-    #[ORM\Column(length: 180, unique: true)]
-    #[Groups(['users_read', 'customers_read', 'invoices_read'])]
-    #[Assert\NotBlank(message: "L'email doit être reseigner")]
+    #[Column(length: 180, unique: true)]
+    #[NotBlank(message: "L'email doit être reseigner")]
     private ?string $email = null;
 
     #[ORM\Column(length: 180, nullable: true)]
-    #[Groups(['users_read'])]
     private ?string $username = null;
 
     #[ORM\Column]
-    #[Groups(['users_read'])]
     private array $roles = [];
 
     /**
      * @var string The hashed passwords
      */
     #[ORM\Column]
+
     private ?string $password = null;
 
     #[ORM\Column(nullable: true)]
+
     private ?string $plainPassword = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['users_read', 'customers_read', 'invoices_read'])]
+
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['users_read', 'customers_read', 'invoices_read'])]
+
     private ?string $lastName = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Customer::class)]
-    #[Groups(['users_read'])]
+
     private Collection $customers;
 
     public function __construct()

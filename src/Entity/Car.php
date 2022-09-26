@@ -15,8 +15,8 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
     normalizationContext: [
         "groups" => ['cars_read']
     ],
-    collectionOperations: ['GET', 'POST'],
-    itemOperations: ['GET', 'PUT', 'DELETE'],
+    collectionOperations: ['POST'],
+    itemOperations: ['GET', 'PUT'],
     order: ['isSold' => 'asc'],
 )]
 #[ApiFilter(

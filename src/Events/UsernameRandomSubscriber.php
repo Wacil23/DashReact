@@ -10,6 +10,9 @@ use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Repository\UserRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+use function PHPSTORM_META\type;
+use function PHPUnit\Framework\isType;
+
 class UsernameRandomSubscriber implements EventSubscriberInterface {
 
     private $security;
@@ -32,16 +35,17 @@ class UsernameRandomSubscriber implements EventSubscriberInterface {
     {
         $result = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
-        $username = $result->getUsername();
+        // $username = $result->getUsername();
 
         if($result instanceof User && $method === 'POST') 
         {   
-            if($username === null || empty($username)){
+            if($result->getUsername() === null || empty($username)){
                 $firstString = mb_substr($result->getFirstName(), 0, 1);
                 $removeAccent = iconv('utf-8', 'us-ascii//TRANSLIT', $firstString);;
                 $lastName = $result->getLastName();
                 $randomNumber = random_int(1, 10);
                 $username = $removeAccent . '' .$lastName . '' . $randomNumber*10;
+
                 $result->setUsername($username);
             }
         }
