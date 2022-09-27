@@ -25,8 +25,12 @@ services:
             - { name: api_platform.doctrine.orm.query_extension.item }
             # - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: updateJwtData, }
 
-
-    
+    App\OpenApi\JwtDecorator:
+        decorates: 'api_platform.openapi.factory'
+        arguments: ['@.inner']
+    App\Controller\:
+        resource: '../src/Controller/'
+        tags: ['controller.service_arguments']
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

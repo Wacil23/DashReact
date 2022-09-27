@@ -2,23 +2,51 @@
 
 namespace App\Entity;
 
-use ORM\Column;
-use Assert\NotBlank;
 use App\Entity\Customer;
+use App\Controller\MeController;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
-    collectionOperations: []
-)]
+    collectionOperations: [
+        'post' => [
+            'method' => 'post',
+            'denormalization_context' => ['groups' => ['post_user']]
+        ],
+        'me' => [
+            'path' => '/me',
+            'method' => 'get',
+            'controller' => MeController::class,
+            'security' => 'is_granted("ROLE_USER")',
+            'normalization_context' => ['groups' => ['read_me']]
+        ],
+    ],
+    itemOperations: [
+        'get' => [
+            'method' => 'get',
+            'normalization_context' => ['groups' => ['read_user']],
+            'security' => "is_granted('ROLE_USER') and object.getId() == user.getId() or is_granted('ROLE_ADMIN') "
+        ],
+        'put' => [
+            'method' => 'put',
+            'security' => "is_granted('ROLE_USER') and object.getId() == user.getId() or is_granted('ROLE_ADMIN') ",
+            'denormalization_context' => ['groups' => ['put_user_item']]
+        ],
+        'delete' => [
+            'method' => 'delete',
+            'security' => "is_granted('ROLE_USER') and object.getId() == user.getId() or is_granted('ROLE_ADMIN') "
+        ]
+    ]
+    )]
 
 #[UniqueEntity("email", message: "L'email doit être différent")]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -26,40 +54,43 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-
+    #[Groups(['post_user', 'read_me', 'read_user'])]
     private ?int $id = null;
 
-    #[Column(length: 180, unique: true)]
-    #[NotBlank(message: "L'email doit être reseigner")]
+    #[ORM\Column(length: 180, unique: true)]
+    #[Groups(['post_user', 'read_me', 'read_user', 'put_user_item'])]
+    #[Assert\NotBlank(message: "L'email doit être reseigner")]
     private ?string $email = null;
 
     #[ORM\Column(length: 180, nullable: true)]
+    #[Groups(['read_me', 'read_user', 'put_user_item'])]
     private ?string $username = null;
 
     #[ORM\Column]
+    #[Groups(['read_me', 'read_user'])]
     private array $roles = [];
 
     /**
      * @var string The hashed passwords
      */
     #[ORM\Column]
-
+    #[Groups(['read_me', 'read_user', 'put_user_item'])]
     private ?string $password = null;
 
     #[ORM\Column(nullable: true)]
-
+    #[Groups(['read_me', 'read_user', 'put_user_item'])]
     private ?string $plainPassword = null;
 
     #[ORM\Column(length: 255)]
-
+    #[Groups(['post_user', 'read_me', 'read_user', 'put_user_item'])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
-
+    #[Groups(['post_user', 'read_me', 'read_user', 'put_user_item'])]
     private ?string $lastName = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Customer::class)]
-
+    #[Groups(['post_user', 'read_me', 'read_user'])]
     private Collection $customers;
 
     public function __construct()

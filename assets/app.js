@@ -10,6 +10,8 @@ const app = () => {
     const [isAuth, setIsAuth] = useState(AuthContext)
     console.log('is Auth ?', isAuth);
     return (
+        <AuthContext.Provider value={{ isAuth, setIsAuth}}>
+
             <div>
                 <BrowserRouter>
                     <div>
@@ -23,6 +25,9 @@ const app = () => {
                     </div>
                 </BrowserRouter >
             </div>
+
+
+        </AuthContext.Provider>
     );
 }
 

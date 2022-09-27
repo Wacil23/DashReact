@@ -7,11 +7,12 @@ namespace App\OpenApi;
 use ApiPlatform\Core\OpenApi\Model;
 use ApiPlatform\Core\OpenApi\OpenApi;
 use ApiPlatform\Core\OpenApi\Factory\OpenApiFactoryInterface;
+use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface as FactoryOpenApiFactoryInterface;
 
-class JwtDecorator implements OpenApiFactoryInterface
+class JwtDecorator implements FactoryOpenApiFactoryInterface
 {
     public function __construct(
-        private OpenApiFactoryInterface $decorated
+        private FactoryOpenApiFactoryInterface $decorated
     ) {}
 
     public function __invoke(array $context = []): OpenApi

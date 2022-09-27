@@ -5,8 +5,11 @@ import { BsEye } from 'react-icons/bs';
 import Lottie from 'lottie-web';
 import { BsEyeSlash } from 'react-icons/bs';
 import AuthContext from '../Context/AuthContext';
+import axios from 'axios';
 
-function Connexion() {
+
+
+const Connexion = ({ history }) => {
 
   const bgHeroContainer = useRef();
   const [isLoading, setIsLoading] = useState(false);
@@ -49,8 +52,8 @@ function Connexion() {
 
 
   const [credentials, setCredentials] = useState({
-    username: 'ASalmi153',
-    password: 'JHLrx1NR'
+    username: 'WZekraoui153',
+    password: '8j4L17j0'
   });
 
   const [passwordShown, setPasswordShown] = useState(false);
@@ -76,6 +79,7 @@ function Connexion() {
       Lottie.play()
       setIsLoading(true);
       setError("");
+      window.location.replace('/')
     }
     catch (error) {
       console.log(error.response);

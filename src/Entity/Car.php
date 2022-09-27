@@ -17,7 +17,6 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
     ],
     collectionOperations: ['POST'],
     itemOperations: ['GET', 'PUT'],
-    order: ['isSold' => 'asc'],
 )]
 #[ApiFilter(
     SearchFilter::class,

@@ -19,21 +19,18 @@ security:
       stateless: true
       jwt: ~
       methods: [POST]
-    login:
-      pattern: ^/api/login
-      stateless: true
-      lazy: true
-      json_login:
-        check_path: /api/login_check # or api_login_check as defined in config/routes.yaml
-        success_handler: lexik_jwt_authentication.handler.authentication_success
-        failure_handler: lexik_jwt_authentication.handler.authentication_failure
     api:
       pattern: ^/api
-      stateless: true
       jwt: ~
     main:
-      lazy: true
       stateless: true
+      pattern: ^/login_check
+      json_login:
+        check_path: /login_check
+        username_path: username
+        password_path: password
+        success_handler: lexik_jwt_authentication.handler.authentication_success
+        failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
       # activate different ways to authenticate
       # https://symfony.com/doc/current/security.html#the-firewall
