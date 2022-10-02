@@ -4,7 +4,9 @@ import { TooltipComponent } from "@syncfusion/ej2-react-popups";
 import { Navbar, Footer, Sidebar, ThemeSettings, Pie, Stacked } from './components';
 import { useStateContext } from './contexts/ContextProvider';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { Area, Bar, Calendar, ColorMapping, Customers, Ecommerce, Editor, Employees, Financial, Kanban, Line, Orders, Pyramid } from './pages';
+import { Area, Bar, Calendar, ColorMapping, Customers, Ecommerce, Editor, Employees, Financial, Invoices, Kanban, Line, Orders, Pyramid } from './pages';
+import { motion } from 'framer-motion'
+
 
 const Home = () => {
     const { activeMenu } = useStateContext();
@@ -31,8 +33,8 @@ const Home = () => {
                     <div className="fixed md:static bg-main-bg dark:bg-main-dark-bg navbar w-full">
                         <Navbar />
                     </div>
-
-                        <Routes>
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                        <Routes >
                             <Route path="/" element={<Ecommerce />} />
                             <Route path="/ecommerce" element={<Ecommerce />} />
 
@@ -40,6 +42,7 @@ const Home = () => {
                             <Route path="/orders" element={<Orders />} />
                             <Route path="/employees" element={<Employees />} />
                             <Route path="/customers" element={<Customers />} />
+                            <Route path="/invoices" element={<Invoices />} />
 
                             {/* Apps */}
                             <Route path="/kanban" element={<Kanban />} />
@@ -55,8 +58,9 @@ const Home = () => {
                             <Route path="/color-mapping" element={<ColorMapping />} />
                             <Route path="/pyramid" element={<Pyramid />} />
                             <Route path="/stacked" element={<Stacked />} />
-
+                            <Route  path="*"  element='no found'/> 
                         </Routes>
+                    </motion.div>
                 </div>
             </div>
         </div>

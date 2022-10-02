@@ -7,12 +7,14 @@ lexik_jwt_authentication:
     
     token_extractors:
       authorization_header:
-        enabled: false
-      cookie:
         enabled: true
-    set_cookies:
-      BEARER:
-        lifetime: 2592000 # set same as refresh to get good error message { "code": 401, "message": "Expired JWT Token" }
+        prefix:  Bearer
+        name:    Authorization
+    #   cookie:
+    #     enabled: true
+    # set_cookies:
+    #   BEARER:
+    #     lifetime: 2592000 # set same as refresh to get good error message { "code": 401, "message": "Expired JWT Token" }
         # samesite: none
         # path: /
         # secure: false # (default to true)

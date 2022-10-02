@@ -31,7 +31,7 @@ class AppFixtures extends Fixture
 
             $chrono = 1;
             $passwords = $user->setRandomPassword($user->getPassword());
-            $hash = $this->encoder->hashPassword($user, $passwords);
+            $hash = $this->encoder->hashPassword($user, 'pass');
             $hashPassword = $user->setPassword($hash);
 
             $user->setFirstName($faker->firstName())
@@ -42,7 +42,7 @@ class AppFixtures extends Fixture
 
             $manager->persist($user);
 
-            for ($c = 0; $c < mt_rand(1, 5); $c++) {
+            for ($c = 0; $c < mt_rand(10, 25); $c++) {
                 $customer = new Customer();
                 $customer->setFirstName($faker->firstName())
                     ->setLastName($faker->lastName())

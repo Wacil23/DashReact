@@ -1,33 +1,19 @@
-import React, { useContext, useState } from "react";
-import { Routes, Route, BrowserRouter, HashRouter } from 'react-router-dom';
-import './styles/app.css';
-import Connexion from "./Connexion/connexion";
-import Home from "./Home";
-import PrivateRoute from "./components/PrivateRoute";
-import AuthContext from "./Context/AuthContext";
+import React from "react";
+import { BrowserRouter, Route } from 'react-router-dom';
+import AnimatedRoute from "./components/AnimatedRoute";
+import Authentication from "./Services/Authentication";
 
 const app = () => {
-    const [isAuth, setIsAuth] = useState(AuthContext)
-    console.log('is Auth ?', isAuth);
+    Authentication.setup();
+    console.log('render APP')
     return (
-        <AuthContext.Provider value={{ isAuth, setIsAuth}}>
-
-            <div>
-                <BrowserRouter>
-                    <div>
-                        <Routes>
-                            {/* Dashboard */}
-                            <Route element={<PrivateRoute />}>
-                                <Route element={<Home />} path='*' />
-                            </Route>
-                            <Route path="/connexion" element={<Connexion />} />
-                        </Routes>
-                    </div>
-                </BrowserRouter >
-            </div>
-
-
-        </AuthContext.Provider>
+        <div>
+            <BrowserRouter>
+                <div>
+                    <AnimatedRoute />
+                </div>
+            </BrowserRouter >
+        </div>
     );
 }
 

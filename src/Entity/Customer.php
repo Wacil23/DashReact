@@ -36,6 +36,7 @@ class Customer
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['customers_read', 'users_read', 'invoices_read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]

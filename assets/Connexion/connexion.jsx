@@ -1,20 +1,20 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Field from '../components/Forms/Field';
 import auth from '../Services/Authentication';
 import { BsEye } from 'react-icons/bs';
 import Lottie from 'lottie-web';
 import { BsEyeSlash } from 'react-icons/bs';
-import AuthContext from '../Context/AuthContext';
-import axios from 'axios';
-
-
+import { useStateContext } from '../contexts/ContextProvider';
+import {motion} from 'framer-motion'
 
 const Connexion = ({ history }) => {
 
   const bgHeroContainer = useRef();
-  const [isLoading, setIsLoading] = useState(false);
-
-  const { setIsAuth } = useContext(AuthContext)
+  const checkMarkContainer = useRef();
+  const [isLog, setIsLog] = useState(false);
+  const [passwordShown, setPasswordShown] = useState(false);
+  const [error, setError] = useState('')
+  const { setIsAuth, isAuth } = useStateContext()
 
   useEffect(() => {
     const bgHero = Lottie.loadAnimation({
@@ -27,10 +27,8 @@ const Connexion = ({ history }) => {
     return () => bgHero.destroy();
   }, [])
 
-  const checkMarkContainer = useRef();
 
   useEffect(() => {
-
     const checkMark = Lottie.loadAnimation({
       container: checkMarkContainer.current,
       animationData: require('../data/loading.json'),
@@ -41,58 +39,50 @@ const Connexion = ({ history }) => {
         preserveAspectRatio: 'xMidYMid slice' // also tried 'xMidYMid meet'
       }
     })
-
     checkMark.pause();
     checkMark.resize(20);
     return () => checkMark.destroy();
-
   }, [])
 
-  const [isLog, setIsLog] = useState(false);
 
 
   const [credentials, setCredentials] = useState({
-    username: 'WZekraoui153',
-    password: '8j4L17j0'
+    username: 'FKlein51',
+    password: 'pass'
   });
 
-  const [passwordShown, setPasswordShown] = useState(false);
 
   const togglePassword = () => {
     setPasswordShown(!passwordShown);
   };
 
-  const [error, setError] = useState('')
 
   const handleChange = ({ currentTarget }) => {
     const { value, name } = currentTarget
     setCredentials({ ...credentials, [name]: value });
   };
 
-
   const handleSubmit = async event => {
     event.preventDefault();
     try {
-      await auth(credentials);
-      setIsLog(true);
-      setIsAuth(true);
-      Lottie.play()
-      setIsLoading(true);
+      await auth.auth(credentials)
       setError("");
-      window.location.replace('/')
+      setIsLog(true);
+      Lottie.play()
+      setTimeout(() => {
+        setIsAuth(true)
+      }, 2800)
     }
     catch (error) {
-      console.log(error.response);
       setError('Désolé, aucun compte n\'a été trouvé');
-      setIsLoading(false);
       setIsLog(false);
     }
-    console.log(credentials);
   };
 
 
+
   return (
-    <div className='flex m-10 justify-evenly items-center md:flex lg:flex-row mx-auto my-auto h-screen'>
+    <motion.div initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0}} className='flex m-10 justify-evenly items-center md:flex lg:flex-row mx-auto my-auto h-screen'>
       <div className='hidden md:flex w-1/2 my-auto '>
         <div alt="" className='mx-auto'>
           <div ref={bgHeroContainer}>
@@ -137,10 +127,7 @@ const Connexion = ({ history }) => {
           &copy;2022 Quartz Corp. All rights reserved.
         </p>
       </div>
-
-    </div>
-
-
+    </motion.div>
   )
 }
 

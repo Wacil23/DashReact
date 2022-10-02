@@ -1,14 +1,16 @@
-import React, { useContext } from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
-import AuthContext from '../Context/AuthContext';
-
+import React from 'react';
+import { Navigate, Outlet, Route } from 'react-router-dom';
+import Connexion from '../Connexion/connexion';
+import { useStateContext } from '../contexts/ContextProvider';
+import Home from '../Home';
 
 const PrivateRoute = () => {
-    const { isAuth } = useContext(AuthContext)
+  const { isAuth } = useStateContext()
+  
+  return (
+    <Route element={isAuth ? <Home /> : <Connexion />} />
+  )
 
-    return(
-        isAuth ? <Outlet /> : <Navigate to='/connexion' />
-    ) 
 };
 
 export default PrivateRoute;

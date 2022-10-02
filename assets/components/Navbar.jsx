@@ -8,6 +8,8 @@ import { TooltipComponent } from '@syncfusion/ej2-react-popups';
 import avatar from '../data/avatar.jpg';
 import { Cart, Chat, Notification, UserProfile } from '.';
 import { useStateContext } from '../contexts/ContextProvider';
+import Authentication from '../Services/Authentication';
+import { useNavigate  } from "react-router-dom";
 
 const NavButton = ({ title, customFunc, icon, color, dotColor }) => (
   <TooltipComponent position='BottomCenter' content={title}>
@@ -18,9 +20,17 @@ const NavButton = ({ title, customFunc, icon, color, dotColor }) => (
   </TooltipComponent>
 )
 
-const Navbar = () => {
+const Navbar = (props) => {
+  const navigate = useNavigate();
 
   const { activeMenu, setActiveMenu, isClicked, setIsClicked, handleClick, screenSize, setScreenSize } = useStateContext();
+
+  const handleLogout = () => {
+    Authentication.logout();
+    navigate('/')
+    window.location.reload();
+    
+  }
 
   useEffect(() => {
     const handleResize = () => setScreenSize(window.innerWidth);
@@ -45,7 +55,7 @@ const Navbar = () => {
     <div className='flex justify-between p-2 md:mx-6 relative'>
       <NavButton title="Menu" customFunc={() => setActiveMenu((prevActiveMenu) => !prevActiveMenu)} color="blue" icon={<AiOutlineMenu />} />
       <div className='flex'>
-        <NavButton title="Menu"
+        <NavButton title="Cart"
           customFunc={() => handleClick('cart')}
           color="blue"
           icon={<FiShoppingCart />}
@@ -72,6 +82,7 @@ const Navbar = () => {
             <MdKeyboardArrowDown className='text-gray-400 text-14' />
           </div>
         </TooltipComponent>
+        <button onClick={handleLogout}> Déconnexion </button>
 
         {isClicked.cart && <Cart />}
         {isClicked.chat && <Chat />}

@@ -7,6 +7,7 @@ import { IoMdContacts } from 'react-icons/io';
 import { RiContactsLine, RiStockLine } from 'react-icons/ri';
 import { MdOutlineSupervisorAccount } from 'react-icons/md';
 import { HiOutlineRefresh } from 'react-icons/hi';
+import { FaFileInvoiceDollar } from 'react-icons/fa';
 import { TiTick } from 'react-icons/ti';
 import { GiLouvrePyramid } from 'react-icons/gi';
 import { GrLocation } from 'react-icons/gr';
@@ -495,6 +496,10 @@ export const links = [
         name: 'customers',
         icon: <RiContactsLine />,
       },
+      {
+        name: 'invoices',
+        icon: <FaFileInvoiceDollar />
+      }
     ],
   },
   {
