@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap');
 
+
 body {
     margin: 0;
     padding: 0;
@@ -11,6 +12,7 @@ body {
 @tailwind utilities;
 
 @layer utilities {
+
     .errorModal {
         animation: shake 0.82s cubic-bezier(.36, .07, .19, .97) both;
         transform: translate3d(0, 0, 0);
@@ -39,4 +41,8 @@ body {
 
   @layer utilities {
 
+
+  }
+  .recharts-wrapper {
+    z-index: 1;
   }

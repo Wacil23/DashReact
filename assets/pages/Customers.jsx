@@ -6,9 +6,11 @@ import CustomersApi from '../Services/CustomersApi';
 import Paginations from '../components/Paginations';
 import ModalPopUp from '../components/Modal';
 import toast, { Toaster } from 'react-hot-toast';
+import { useStateContext } from '../contexts/ContextProvider';
 
 const Customers = () => {
-
+  
+  const {currentColor}  = useStateContext();
   const [customers, setCustomers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
@@ -80,7 +82,7 @@ const Customers = () => {
         <tbody>{paginatedCustomers.map(customer => (
           <tr key={customer.id}>
             <td>{customer.id}</td>
-            <td><Link className='hover:text-blue-600 underline' to={"/customers/" + customer.id}>{customer.firstName} {customer.lastName}</Link></td>
+            <td><Link style={{color: currentColor}} className='font-semibold' to={"/customers/" + customer.id}>{customer.firstName} {customer.lastName}</Link></td>
             <td>{customer.email}</td>
             <td>{customer.adress}</td>
             <td>{customer.phone}</td>
@@ -94,7 +96,7 @@ const Customers = () => {
           </tr>
         ))}</tbody>
       </Table>
-      {itemsPerPage < filterCustomers.length && <Paginations itemsPerPage={itemsPerPage} length={filterCustomers.length} onPageChange={handleChangePage} currentPage={currentPage} />}
+      {itemsPerPage < filterCustomers.length && <Paginations currentColor={currentColor} itemsPerPage={itemsPerPage} length={filterCustomers.length} onPageChange={handleChangePage} currentPage={currentPage} />}
       <Toaster />
     </div>
   )

@@ -7,8 +7,9 @@ import { useStateContext } from '../contexts/ContextProvider';
 import Home from '../Home';
 
 const Ecommerce = () => {
+  const {currentColor} = useStateContext()
   return (
-    <div className='mt-12'>
+    <div className='mt-24'>
 
       <div className='flex flex-wrap lg:flex-nowrap justify-center'>
         <div className='bg-white dark:text-gray-200 dark:bg-secondary-dark-bg h-44 rounded-xl w-full lg:w-80 p-8 pt-9 m-3 bg-hero-pattern bg-no-repeat bg-cover bg-center'>
@@ -19,7 +20,7 @@ const Ecommerce = () => {
             </div>
           </div>
           <div className='mt-6'>
-              <Button color="white" bgColor="blue" text="Download" borderRadius="10px" size="md" />
+              <Button color="white" bgColor={currentColor} text="Download" borderRadius="10px" size="md" />
           </div>
         </div>
         <div className='flex m-3 justify-center gap-1 flex-wrap items-center'>
@@ -45,7 +46,7 @@ const Ecommerce = () => {
 
       </div>
       <div className="flex gap-10 flex-wrap justify-center">
-        <div className="bg-white dark:text-gray-200 dark:bg-secondary-dark-bg m-3 rounded-2xl md:w-780">
+        <div className="bg-white dark:text-gray-200 dark:bg-secondary-dark-bg p-4 m-3 rounded-2xl md:w-780">
           <div className="flex justify-between">
             <p className='font-semibold text-xl'>Revenue Updates</p>
             <div className="flex items-center gap-4">
@@ -71,8 +72,8 @@ const Ecommerce = () => {
                 </p>
               </div>
               <div className='mt-8'>
-                <p>
-                  <span className='font-semibold text-3xl' >34'715€</span>
+                <p className='text-3xl font-semibold'>
+                  34'715€
                   
                 </p>
                 <p className='text-gray-500 mt-1'>
@@ -83,13 +84,13 @@ const Ecommerce = () => {
                 <SparkLine/>
               </div>
               <div className="mt-10">
-                <Button color="white" bgColor="blue" text="Download Report" borderRadius="10px" />
+                <Button color="white" bgColor={currentColor} text="Download Report" borderRadius="10px" />
               </div>
             </div>
-            <div>
+
             <Stacked />
               {/* <Stacked width="320px" height="360px" position='static'/> */}
-            </div>
+
           </div>
         </div>
       </div>

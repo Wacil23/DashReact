@@ -3,9 +3,11 @@ import { Modal, Button, Group } from '@mantine/core';
 import Field from './Forms/Field';
 import CustomersApi from '../Services/CustomersApi';
 import toast, { Toaster } from 'react-hot-toast';
+import { useStateContext } from '../contexts/ContextProvider';
 
 
 const ModalPopUp = ({customers, setCustomers }) => {
+    const { currentColor} = useStateContext();
     const [opened, setOpened] = useState(false);
     const [newCustomers, setNewCustomers] = useState();
     const [credentials, setCredentials] = useState({
@@ -70,7 +72,7 @@ const ModalPopUp = ({customers, setCustomers }) => {
             </Modal>
 
             <Group position="center">
-                <Button className='bg-slate-900' onClick={() => setOpened(true)}>Créer un nouveau client</Button>
+                <Button style={{backgroundColor: currentColor}} onClick={() => setOpened(true)}>Créer un nouveau client</Button>
             </Group>
         </>
     );

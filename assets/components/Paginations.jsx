@@ -1,18 +1,20 @@
 import { Pagination } from '@mantine/core';
 import React from 'react';
+import { useStateContext } from '../contexts/ContextProvider';
 
 
-const Paginations = ({currentPage, itemsPerPage, length, onPageChange }) => {
+const Paginations = ({currentPage, itemsPerPage, length, onPageChange, currentColor }) => {
 
-    const pageCount = Math.ceil(length / itemsPerPage);
-    const pages = [];
-
-    for (let i = 1; i <= pageCount; i++) {
-        pages.push(i)
-    }
+  
+  const pageCount = Math.ceil(length / itemsPerPage);
+  const pages = [];
+  
+  for (let i = 1; i <= pageCount; i++) {
+    pages.push(i)
+  }
 
   return (
-    <Pagination total={pages.length} page={currentPage} onChange={onPageChange} withEdges />
+    <Pagination  color={currentColor} total={pages.length} page={currentPage} onChange={onPageChange} withEdges />
   )
 }
 

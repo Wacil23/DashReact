@@ -10,13 +10,13 @@ import Customer from './pages/Customer';
 
 
 const Home = () => {
-    const { activeMenu } = useStateContext();
+    const { activeMenu, themeSettings, setThemeSettings, currentColor, currentMode } = useStateContext();
     return (
-        <div>
+        <div className={currentMode === 'Dark' ? 'dark' : ''}>
             <div className="flex relative dark:bg-main-dark-bg">
                 <div className="fixed right-4 bottom-4" style={{ zIndex: "1000" }}>
                     <TooltipComponent content="Settings" position="TopCenter">
-                        <button type="button" className="text-3xl p-3 hover:drop-shadow-xl hover:bg-light-gray text-white" style={{ background: 'blue', borderRadius: '50%' }}>
+                        <button type="button" className="text-3xl p-3 hover:drop-shadow-xl hover:bg-light-gray text-white" style={{ background: currentColor, borderRadius: '50%' }} onClick={() => setThemeSettings(!themeSettings)} >
                             <FiSettings />
                         </button>
                     </TooltipComponent>
@@ -34,8 +34,13 @@ const Home = () => {
                     <div className="fixed md:static bg-main-bg dark:bg-main-dark-bg navbar w-full">
                         <Navbar />
                     </div>
+                    {themeSettings && (
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+
+                            <ThemeSettings />
+                        </motion.div>
+                    )}
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                        {/* <ThemeSettings /> */}
                         <Routes >
                             <Route path="/" element={<Ecommerce />} />
                             <Route path="/ecommerce" element={<Ecommerce />} />

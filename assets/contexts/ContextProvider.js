@@ -17,6 +17,21 @@ export const ContextProvider = ({ children }) => {
     const [screenSize, setScreenSize] = useState(undefined);
 
     const [isAuth, setIsAuth] = useState(Authentication.isAuth());
+    const [currentColor, setCurrentColor] = useState('#03C9D7');
+    const [currentMode, setCurrentMode] = useState('Light');
+    const [themeSettings, setThemeSettings] = useState(false);
+
+    const setMode = (mode) => {
+        setCurrentMode(mode.target.defaultValue);
+        localStorage.setItem('themeMode', mode.target.defaultValue)
+        console.log('mode :', mode)
+        setThemeSettings(false)
+    }
+    const setColor = (color) => {
+        setCurrentColor(color);
+        localStorage.setItem('colorMode', color)
+        setThemeSettings(false)
+    }
 
     const handleClick = (clicked) => {
         setIsClicked({ ...initialState, [clicked]: true });
@@ -28,7 +43,10 @@ export const ContextProvider = ({ children }) => {
             isClicked, setIsClicked,
             handleClick,
             screenSize, setScreenSize,
-            isAuth, setIsAuth
+            isAuth, setIsAuth,
+            currentColor, currentMode,
+            themeSettings, setThemeSettings,
+            setMode, setColor
         }}>
             {children}
 
