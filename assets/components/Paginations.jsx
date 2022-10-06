@@ -9,7 +9,6 @@ const Paginations = ({currentPage, itemsPerPage, length, onPageChange }) => {
 
     for (let i = 1; i <= pageCount; i++) {
         pages.push(i)
-        console.log(pages)
     }
 
   return (

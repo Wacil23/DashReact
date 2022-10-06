@@ -6,6 +6,7 @@ import { useStateContext } from './contexts/ContextProvider';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Area, Bar, Calendar, ColorMapping, Customers, Ecommerce, Editor, Employees, Financial, Invoices, Kanban, Line, Orders, Pyramid } from './pages';
 import { motion } from 'framer-motion'
+import Customer from './pages/Customer';
 
 
 const Home = () => {
@@ -34,6 +35,7 @@ const Home = () => {
                         <Navbar />
                     </div>
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                        {/* <ThemeSettings /> */}
                         <Routes >
                             <Route path="/" element={<Ecommerce />} />
                             <Route path="/ecommerce" element={<Ecommerce />} />
@@ -42,6 +44,7 @@ const Home = () => {
                             <Route path="/orders" element={<Orders />} />
                             <Route path="/employees" element={<Employees />} />
                             <Route path="/customers" element={<Customers />} />
+                            <Route path="/customers/:id" element={<Customer />} />
                             <Route path="/invoices" element={<Invoices />} />
 
                             {/* Apps */}
@@ -58,7 +61,7 @@ const Home = () => {
                             <Route path="/color-mapping" element={<ColorMapping />} />
                             <Route path="/pyramid" element={<Pyramid />} />
                             <Route path="/stacked" element={<Stacked />} />
-                            <Route  path="*"  element='no found'/> 
+                            <Route path="*" element='no found' />
                         </Routes>
                     </motion.div>
                 </div>

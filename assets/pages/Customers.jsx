@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { Header } from '../components';
 import CustomersApi from '../Services/CustomersApi';
 import Paginations from '../components/Paginations';
+import ModalPopUp from '../components/Modal';
+import toast, { Toaster } from 'react-hot-toast';
 
 const Customers = () => {
 
@@ -14,14 +16,17 @@ const Customers = () => {
 
   const fetchCustomers = async () => {
     try {
-      const data = await CustomersApi.findAll(customers)
+      const data = await CustomersApi.findAll()
       setCustomers(data)
+      console.log('cest customers,', customers)
+      console.log('cest data,', data)
+      setLoading(false);
+
     }
     catch (error) {
       console.error('impossible');
     }
   }
-
 
   const handleChangePage = (page) => setCurrentPage(page);
 
@@ -49,13 +54,27 @@ const Customers = () => {
     </tr>
   );
 
-
-
-
+  const handleDelete = async (id) => {
+    const originalCustomer = [...customers];
+    setCustomers(customers.filter(customer => customer.id !== id));
+    try {
+      await CustomersApi.delete(id)
+      toast.success('Le client à bien été supprimé')
+    }
+    catch (error) {
+      toast.error('Un problème est survenue')
+      console.log(1);
+      setCustomers(originalCustomer);
+      console.log();
+    };
+  }
 
   return (
     <div className='m-2 md:m-10 p-2 md:p-10 bg-white rounded-3xl'>
-      <Header category='Page' title='Customers' />
+      <div className="flex justify-between">
+        <Header category='Page' title='Customers' />
+          <ModalPopUp customers={customers} setCustomers={setCustomers} fetchCustomers={fetchCustomers} className='text-gray-900' />
+      </div>
       <Table striped highlightOnHover>
         <thead>{ths}</thead>
         <tbody>{paginatedCustomers.map(customer => (
@@ -70,12 +89,13 @@ const Customers = () => {
             </td>
             <td>{customer.totalAmount.toLocaleString()} €</td>
             <td>
-              <button className="hover:text-red-600 ">supprimer</button>
+              <button onClick={() => handleDelete(customer.id)} className="hover:text-red-600 ">supprimer</button>
             </td>
           </tr>
         ))}</tbody>
       </Table>
       {itemsPerPage < filterCustomers.length && <Paginations itemsPerPage={itemsPerPage} length={filterCustomers.length} onPageChange={handleChangePage} currentPage={currentPage} />}
+      <Toaster />
     </div>
   )
 }

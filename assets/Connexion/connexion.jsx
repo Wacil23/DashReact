@@ -47,7 +47,7 @@ const Connexion = ({ history }) => {
 
 
   const [credentials, setCredentials] = useState({
-    username: 'FKlein51',
+    username: 'SGaudin170',
     password: 'pass'
   });
 

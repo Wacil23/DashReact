@@ -35,7 +35,7 @@ class Customer
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column()]
     #[Groups(['customers_read', 'users_read', 'invoices_read'])]
     private ?int $id = null;
 
@@ -65,7 +65,7 @@ class Customer
     #[ORM\Column(length: 255)]
     #[Groups(['customers_read', 'users_read', 'invoices_read'])]
     #[Assert\NotBlank(message: "Le numéro du client est obligatoire")]
-    #[Assert\Regex(pattern: "^\(\+33\)[0-9]*$^", message: "Le format du numéro est incorrect")]
+    #[Assert\Regex(pattern: "/^([0-9 ]+)$/", message: "Le format du numéro est incorrect")]
     private ?string $phone = null;
 
     #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Invoice::class)]
