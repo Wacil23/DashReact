@@ -1,9 +1,8 @@
 import React from 'react';
 import { FiSettings } from 'react-icons/fi';
-import { TooltipComponent } from "@syncfusion/ej2-react-popups";
-import { Navbar, Footer, Sidebar, ThemeSettings, Pie, Stacked } from './components';
+import { Navbar, Sidebar, ThemeSettings, Pie, Stacked } from './components';
 import { useStateContext } from './contexts/ContextProvider';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { Area, Bar, Calendar, ColorMapping, Customers, Ecommerce, Editor, Employees, Financial, Invoices, Kanban, Line, Orders, Pyramid } from './pages';
 import { motion } from 'framer-motion'
 import Customer from './pages/Customer';
@@ -15,11 +14,9 @@ const Home = () => {
         <div className={currentMode === 'Dark' ? 'dark' : ''}>
             <div className="flex relative dark:bg-main-dark-bg">
                 <div className="fixed right-4 bottom-4" style={{ zIndex: "1000" }}>
-                    <TooltipComponent content="Settings" position="TopCenter">
                         <button type="button" className="text-3xl p-3 hover:drop-shadow-xl hover:bg-light-gray text-white" style={{ background: currentColor, borderRadius: '50%' }} onClick={() => setThemeSettings(!themeSettings)} >
                             <FiSettings />
                         </button>
-                    </TooltipComponent>
                 </div>
                 {activeMenu ? (
                     <div className="w-72 fixed sidebar dark:bg-secondary-dark-bg bg-white ease-linear duration-200">

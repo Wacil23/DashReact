@@ -14,7 +14,7 @@ const Paginations = ({currentPage, itemsPerPage, length, onPageChange, currentCo
   }
 
   return (
-    <Pagination  color={currentColor} total={pages.length} page={currentPage} onChange={onPageChange} withEdges />
+    <Pagination  className='place-content-center mt-20 dark:text-white' color={{currentColor}} total={pages.length} page={currentPage} onChange={onPageChange} withEdges />
   )
 }
 

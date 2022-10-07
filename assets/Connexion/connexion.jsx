@@ -59,6 +59,7 @@ const Connexion = ({ history }) => {
 
   const handleChange = ({ currentTarget }) => {
     const { value, name } = currentTarget
+    
     setCredentials({ ...credentials, [name]: value });
   };
 

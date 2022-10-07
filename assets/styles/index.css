@@ -7,6 +7,14 @@ body {
     font-family: 'Open Sans', sans-serif;
 }
 
+.mantine-Modal-title{
+    padding-left: 33%;
+    font-weight: bold
+}
+
+  
+  
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

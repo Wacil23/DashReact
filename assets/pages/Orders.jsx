@@ -1,7 +1,5 @@
 import React from 'react'
-import { GridComponent, ColumnsDirective, ColumnDirective, Resize, Sort, ContextMenu, Filter, Page, ExcelExport, PdfExport, Edit, Inject} from '@syncfusion/ej2-react-grids';
 import Header from '../components/Header';
-import { ordersData, contextMenuItems, ordersGrid } from '../data/dummy'
 import { Table } from '@mantine/core';
 import { Link } from 'react-router-dom';
 

@@ -15,10 +15,10 @@ export const ContextProvider = ({ children }) => {
     const [activeMenu, setActiveMenu] = useState(true);
     const [isClicked, setIsClicked] = useState(initialState);
     const [screenSize, setScreenSize] = useState(undefined);
-
+    const currentModeLocal = window.localStorage.getItem('themeMode');
     const [isAuth, setIsAuth] = useState(Authentication.isAuth());
     const [currentColor, setCurrentColor] = useState('#03C9D7');
-    const [currentMode, setCurrentMode] = useState('Light');
+    const [currentMode, setCurrentMode] = useState(currentModeLocal);
     const [themeSettings, setThemeSettings] = useState(false);
 
     const setMode = (mode) => {
