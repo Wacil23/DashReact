@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Invoice;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\JoinColumn;
 use App\Repository\CustomerRepository;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\Common\Collections\Collection;
@@ -11,9 +12,9 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
 #[ApiResource(
@@ -68,9 +69,9 @@ class Customer
     #[Assert\Regex(pattern: "/^([0-9 ]+)$/", message: "Le format du numéro est incorrect")]
     private ?string $phone = null;
 
-    #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Invoice::class)]
+    #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Invoice::class, cascade: ['remove'])]
     #[Groups(['customers_read'])]
-    private Collection $invoices;
+     private Collection $invoices;
 
     #[ORM\ManyToOne(inversedBy: 'customers')]
     #[Groups(['customers_read'])]

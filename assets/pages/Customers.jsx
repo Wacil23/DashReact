@@ -85,15 +85,15 @@ const Customers = (props) => {
           <thead className='dark:text-white'>{ths}</thead>
           <tbody className='dark:text-white'>{paginatedCustomers.map(customer => (
             <tr key={customer.id}>
-              <td>{loading ? <Skeleton height={8} radius="xl" width='100%'/> : customer.id}</td>
+              <td>{loading ? <Skeleton height={8} radius="xl" width='100%' /> : customer.id}</td>
               <td><Link style={{ color: currentColor }} className='font-semibold' to={"/customers/" + customer.id}>{loading ? (<Skeleton height={8} radius="xl" />) : (customer.firstName + ' ' + customer.lastName)}</Link></td>
-              <td>{loading ? <Skeleton height={8} radius="xl" width='100%'/> : customer.email}</td>
-              <td>{loading ? <Skeleton height={8} radius="xl" width='100%'/> : customer.adress}</td>
-              <td>{loading ? <Skeleton height={8} radius="xl" width='100%'/> : customer.phone}</td>
+              <td><a href={`mailto:${customer.adress}`} className='hover:underline'>{loading ? <Skeleton height={8} radius="xl" width='100%' /> : customer.email}</a></td>
+              <td>{loading ? <Skeleton height={8} radius="xl" width='100%' /> : customer.adress}</td>
+              <td><a href={`tel:${customer.phone}`}> {loading ? <Skeleton height={8} radius="xl" width='100%' /> : customer.phone}</a></td>
               <td>
                 <span className="badge bg-info">{loading ? <Skeleton height={8} radius="xl" width='100%' /> : customer.invoices.length}</span>
               </td>
-              <td>{loading ? <Skeleton height={8} radius="xl" width='100%'/> : customer.totalAmount.toLocaleString() + ' €'}</td>
+              <td>{loading ? <Skeleton height={8} radius="xl" width='100%' /> : customer.totalAmount.toLocaleString() + ' €'}</td>
               <td>
                 <button onClick={() => handleDelete(customer.id)} className="hover:text-red-600 ">supprimer</button>
               </td>

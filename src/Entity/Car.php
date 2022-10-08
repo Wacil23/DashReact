@@ -27,7 +27,7 @@ class Car
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column()]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -70,8 +70,8 @@ class Car
     #[Groups(['cars_read', 'invoices_read'])]
     private ?string $gearbox = null;
 
-    #[ORM\OneToOne(mappedBy: "car", cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\OneToOne(mappedBy: "car", cascade: ['remove'])]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'CASCADE')]
     #[Groups(['cars_read'])]
     private ?Invoice $invoice = null;
 

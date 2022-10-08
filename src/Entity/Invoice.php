@@ -2,22 +2,22 @@
 
 namespace App\Entity;
 
-use Assert\Choice;
+use DateTime;
+use App\Entity\Car;
 use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\InvoiceRepository;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
-use DateTime;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 #[ORM\Entity(repositoryClass: InvoiceRepository::class)]
 #[ApiResource(
     itemOperations: [
-        'GET', 
-        'PUT', 
+        'GET',
+        'PUT',
         'DELETE'
     ],
     attributes: [
@@ -35,16 +35,18 @@ use Symfony\Component\Validator\Constraints as Assert;
     ],
 
 )]
-#[ApiFilter(
-    SearchFilter::class,
-    properties: ['amount', 'paymentMethod']
-),
+#[
+    ApiFilter(
+        SearchFilter::class,
+        properties: ['amount', 'paymentMethod']
+    ),
 ]
 class Invoice
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column()]
+    #[Groups(['customers_read', 'users_read', 'invoices_read'])]
     private ?int $id = null;
 
     #[ORM\Column]
@@ -61,8 +63,7 @@ class Invoice
     #[Assert\Choice(choices: ['PAID', 'CANCELLED', 'SENT'], message: "Le choix doit etre paid cancelled ou sent")]
     private ?string $status = null;
 
-    #[ORM\ManyToOne(inversedBy: 'invoices')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(inversedBy: 'invoices', cascade: ['remove'])]
     #[Groups(['invoices_read'])]
     private ?Customer $customer = null;
 
@@ -74,7 +75,8 @@ class Invoice
     #[Groups(['invoices_read', 'customers_read'])]
     private ?int $chrono = null;
 
-    #[ORM\OneToOne(inversedBy: 'invoice', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'invoice', targetEntity: Car::class, cascade: ['remove'])]
+    #[ORM\JoinColumn(nullable: false , onDelete: 'CASCADE')]
     #[Groups(['invoices_read'])]
     private ?Car $car = null;
 
@@ -103,9 +105,8 @@ class Invoice
 
     public function setSentAt($sentAt)
     {
-            $this->sentAt = $sentAt;
-            return $this;
-        
+        $this->sentAt = $sentAt;
+        return $this;
     }
 
     public function getStatus(): ?string
@@ -172,7 +173,8 @@ class Invoice
      * @Groups({"invoices_read"})
      * @return User
      */
-    public function getUser(): User{
+    public function getUser(): User
+    {
         return $this->customer->getUser();
     }
 }

@@ -1,7 +1,7 @@
 import { Input } from '@mantine/core'
 import React from 'react'
 
-function FieldMantine({ name, label, component, value, onChange, className='', type = "text", error = "", placeholder, togglePassword, mask='' }) {
+function FieldMantine({ name, label, component, value, onChange, className='', type = "text", error = "", placeholder, togglePassword, mask='', loading }) {
     return (
       <div>
         <Input.Wrapper id={name} label={label} className={className} required>

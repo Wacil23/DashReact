@@ -42,7 +42,6 @@ class UserSubscriber implements EventSubscriberInterface
     public function getSubscribedEvents()
     {
         return [
-            Events::preUpdate,
             Events::postPersist,
         ];
     }
